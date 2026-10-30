@@ -1,4 +1,4 @@
-﻿# ai-business-platform
+# Product Lab — SaaS Web
 
 AI-powered B2B SaaS - .NET, Azure, AI Agents and Cloud Native
 
