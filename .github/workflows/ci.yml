@@ -20,8 +20,8 @@ jobs:
       - name: Container health
         run: |
           docker run --rm -d --name agentops-check -p 127.0.0.1:8090:8080 --read-only --tmpfs /tmp --cap-drop ALL agentops:test
-          trap 'docker stop agentops-check' EXIT
-          curl --fail --retry 12 --retry-connrefused --retry-delay 1 http://127.0.0.1:8090/health
+          trap 'docker logs agentops-check; docker stop agentops-check' EXIT
+          curl --fail --max-time 2 --retry 12 --retry-all-errors --retry-delay 1 --retry-max-time 30 http://127.0.0.1:8090/health
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
