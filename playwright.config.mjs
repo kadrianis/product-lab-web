@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'./products/cycle-001/tests/browser',use:{baseURL:'http://127.0.0.1:5081',viewport:{width:390,height:844},...(process.env.PLAYWRIGHT_CHANNEL?{channel:process.env.PLAYWRIGHT_CHANNEL}:{})},webServer:{command:'dotnet run --no-build --project products/cycle-001/api --urls http://127.0.0.1:5081',url:'http://127.0.0.1:5081/health',reuseExistingServer:false}});

@@ -1,9 +1,10 @@
-﻿.env
-.env.*
-!.env.example
 **/bin/
 **/obj/
 node_modules/
-__pycache__/
-.venv/
-*.user
+.env
+.env.*
+!.env.example
+.expo/
+dist/
+playwright-report/
+test-results/

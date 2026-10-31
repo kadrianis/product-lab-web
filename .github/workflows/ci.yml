@@ -1,0 +1,27 @@
+name: quality
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: dotnet build products/cycle-001/api/Api.csproj
+      - run: dotnet run --project products/cycle-001/tests/DomainTests.csproj
+      - run: node --test products/cycle-001/tests/api.test.mjs
+      - run: docker build -t agentops:test products/cycle-001
+      - name: Container health
+        run: |
+          docker run --rm -d --name agentops-check -p 127.0.0.1:8090:8080 --read-only --tmpfs /tmp --cap-drop ALL agentops:test
+          trap 'docker stop agentops-check' EXIT
+          curl --fail --retry 12 --retry-connrefused --retry-delay 1 http://127.0.0.1:8090/health
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
